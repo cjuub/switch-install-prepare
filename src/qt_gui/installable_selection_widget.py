@@ -34,5 +34,15 @@ class InstallableSelectionWidget(QListWidget, Observer, metaclass=__GameSelectio
 
             self.addItem(checkbox)
 
+        self.itemChanged.connect(self.__check_state_changed)
+
     def notify(self):
         self.update_contents()
+
+    def __check_state_changed(self):
+        for i in range(self.count()):
+            checkbox = self.item(i)
+            if checkbox.checkState() != 0:
+                self.__presenter.on_installable_checked(checkbox.text())
+            elif checkbox.checkState() == 0:
+                self.__presenter.on_installable_unchecked(checkbox.text())

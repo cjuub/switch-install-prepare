@@ -27,6 +27,8 @@ class QtGui:
             PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
         self.__app = QApplication([])
+        self.__app.setStyle('Windows')
+
         self.__window = QWidget()
         self.__window.setMinimumWidth(1366)
 
@@ -35,7 +37,7 @@ class QtGui:
         layout = QHBoxLayout()
         done_button = QPushButton()
         done_button.setText('Done')
-        done_button.clicked.connect(lambda: print('asdf'))
+        done_button.clicked.connect(application.download_selected_files)
         layout.addWidget(done_button)
 
         self.game_selection_view_model = GameSelectionViewModel()

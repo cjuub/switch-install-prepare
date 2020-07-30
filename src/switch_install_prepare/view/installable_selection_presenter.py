@@ -37,5 +37,15 @@ class InstallableSelectionPresenter(Observer):
 
         self.__view_model.notify_observers()
 
+    def on_installable_checked(self, installable: str):
+        if installable not in self.__view_model.checked_installables:
+            self.__view_model.checked_installables.append(installable)
+            self.__application.add_installable(installable)
+
+    def on_installable_unchecked(self, installable: str):
+        if installable in self.__view_model.checked_installables:
+            self.__view_model.checked_installables.remove(installable)
+            self.__application.remove_installable(installable)
+
     def notify(self):
         self.on_game_selected()
