@@ -123,6 +123,8 @@ class SwitchInstallPrepare:
                 shutil.move(filename, str(output_directory))
             elif filename.endswith('.rar'):
                 self.execute_command(['unrar', 'x', '-o+', filename, str(output_directory)])
+            elif filename.endswith('.7z'):
+                self.execute_command(['7z', 'x', f'-o{str(output_directory)}', filename])
 
         for filename in glob.iglob(str(output_directory) + '**/*.xci', recursive=True):
             self.execute_command([str(self.__server_info.path_4nxci),
