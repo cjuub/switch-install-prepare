@@ -124,21 +124,19 @@ class SwitchInstallPrepare:
             elif filename.endswith('.rar'):
                 self.execute_command(['unrar', 'x', '-o+', filename, str(output_directory)])
             elif filename.endswith('.7z'):
-                self.execute_command(['7z', 'x', f'-o{str(output_directory)}', filename])
-
-        for filename in glob.iglob(str(output_directory) + '**/*.xci', recursive=True):
-            self.execute_command([str(self.__server_info.path_4nxci),
-                                  '-k', str(self.__server_info.prod_keys),
-                                  '-o', str(output_directory),
-                                  filename])
-            os.remove(filename)
+                self.execute_command(['7z', 'x', filename, f'-o{str(output_directory)}'])
 
     def _download_file(self, server_info: ServerInfo, game_info: GameInfo, file: str):
         working_directory = Path(os.getcwd()) / 'nsps'
         os.makedirs(working_directory, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=working_directory) as local_path:
             local_path = Path(local_path)
-            remote_path = '"' + server_info.remote_games_path + game_info.name + '/' + file + '"'
+            remote_path = server_info.remote_games_path + game_info.name + '/' + file
+            remote_path = remote_path.replace(" ", "\\ ")
+            remote_path = remote_path.replace("[", "\\[")
+            remote_path = remote_path.replace("]", "\\]")
+            remote_path = remote_path.replace("(", "\\(")
+            remote_path = remote_path.replace(")", "\\)")
             self.execute_command(server_info.create_scp_command(remote_path, local_path))
 
             self._collect_game_files(local_path, working_directory)
